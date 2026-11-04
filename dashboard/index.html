@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<script>
+if (!/\/$|\.html?$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);
+(() => { try { document.documentElement.dataset.theme = localStorage.getItem('theme') || 'dark'; } catch (e) {} })();
+</script>
+<link rel="icon" href="../favicon.ico" sizes="32x32">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/boxicons.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+<link rel="stylesheet" href="../css/app.css">
+<title>Dashboard · codeq analytics</title>
+</head>
+<body data-page="app">
+<header id="top"></header>
+
+<div class="shell" id="shell">
+  <aside class="rail" id="rail" hidden>
+    <div class="sw" id="sw">
+      <button class="sw-btn" id="swBtn" type="button" aria-haspopup="listbox" aria-expanded="false">
+        <span class="ava" id="swAva"></span>
+        <span class="sw-txt"><b id="swName"></b><small id="swDom"></small></span>
+        <i class="bx bx-chevron-down"></i>
+      </button>
+      <div class="sw-pop" id="swPop" hidden>
+        <label class="sw-find"><i class="bx bx-search"></i><input id="swQ" autocomplete="off" spellcheck="false"></label>
+        <ul class="sw-list" id="swList" role="listbox"></ul>
+        <a class="sw-add" href="#/new"><i class="bx bx-plus"></i><span data-i18n="add">Add a site</span></a>
+      </div>
+    </div>
+    <nav class="nav" id="tabs">
+      <a href="#/overview" data-r="overview"><i class="bx bx-grid-alt"></i><span data-i18n="nOv">Overview</span></a>
+      <a href="#/pages" data-r="pages" data-stats><i class="bx bx-file"></i><span data-i18n="nPg">Pages</span></a>
+      <a href="#/sources" data-r="sources" data-stats><i class="bx bx-link-alt"></i><span data-i18n="nSrc">Sources</span></a>
+      <a href="#/audience" data-r="audience" data-stats><i class="bx bx-world"></i><span data-i18n="nAud">Audience</span></a>
+      <a href="#/tech" data-r="tech" data-stats><i class="bx bx-devices"></i><span data-i18n="nTech">Technology</span></a>
+      <a href="#/settings" data-r="settings" class="nav-sep"><i class="bx bx-cog"></i><span data-i18n="nSet">Settings</span></a>
+    </nav>
+    <a class="rail-add" href="#/new"><i class="bx bx-plus"></i><span data-i18n="add">Add a site</span></a>
+  </aside>
+
+  <main class="ws" id="ws">
+    <div class="boot" id="boot"><span class="spin"></span></div>
+
+    <div class="vhead" id="vhead" hidden>
+      <div class="vtitle"><div class="vt-row"><h1 id="vTitle"></h1><input class="vt-in" id="vTitleIn" maxlength="80" autocomplete="off" spellcheck="false" hidden><button class="vt-edit" id="vEdit" type="button" hidden><i class="bx bx-pencil"></i></button></div><p id="vSub"></p></div>
+      <div class="vtools" id="tools">
+        <span class="upd" id="upd"></span>
+        <button class="icon-btn" id="rf" type="button"><i class="bx bx-refresh"></i></button>
+        <div class="seg" id="range"></div>
+      </div>
+    </div>
+
+    <section class="view" data-view="overview" hidden>
+      <article class="card frame2">
+        <div class="tiles" id="metrics"></div>
+        <div class="inset chart-box"><div class="bchart" id="chart"></div></div>
+        <p class="ins" id="ins"></p>
+      </article>
+      <div class="quad">
+        <article class="card tcard"><div class="ib-h"><h3 data-i18n="tp">Top pages</h3></div><div class="lbody" id="ovPages"></div><a class="cfoot" href="#/pages"><span data-i18n="openRep">Open report</span><i class="bx bx-chevron-right"></i></a></article>
+        <article class="card tcard"><div class="ib-h"><h3 data-i18n="ts">Sources</h3></div><div class="lbody" id="ovSrc"></div><a class="cfoot" href="#/sources"><span data-i18n="openRep">Open report</span><i class="bx bx-chevron-right"></i></a></article>
+        <article class="card tcard"><div class="ib-h"><h3 data-i18n="tc">Countries</h3></div><div class="lbody" id="ovCtry"></div><a class="cfoot" href="#/audience"><span data-i18n="openRep">Open report</span><i class="bx bx-chevron-right"></i></a></article>
+        <article class="card tcard"><div class="ib-h"><h3 data-i18n="td">Devices</h3></div><div class="lbody" id="ovDev"></div><a class="cfoot" href="#/tech"><span data-i18n="openRep">Open report</span><i class="bx bx-chevron-right"></i></a></article>
+      </div>
+      <p class="acc" data-i18n="acc"></p>
+    </section>
+
+    <section class="view" data-view="verify" hidden>
+      <div class="v-intro"><ol class="stepper" id="vStep"></ol><p class="lead" data-i18n="vsub"></p></div>
+      <div class="sgroup">
+        <h2 data-i18n="vo1">Option 1: code on the home page</h2>
+        <div class="slist">
+          <div class="srow"><span class="sl" data-i18n="vWhere">Where</span><div class="sv"><span id="vHome"></span></div></div>
+          <div class="srow"><span class="sl" data-i18n="vCode">Code</span>
+            <div class="sv"><pre class="code" id="vcode"></pre><button class="btn sm" type="button" data-copy="vcode"><i class="bx bx-copy"></i><span data-i18n="copy">Copy</span></button></div></div>
+        </div>
+      </div>
+      <div class="sgroup">
+        <h2 data-i18n="vo2">Option 2: TXT record in DNS</h2>
+        <div class="slist">
+          <div class="srow"><span class="sl" data-i18n="vWhere">Where</span><div class="sv"><span data-i18n="dnsWhere"></span></div></div>
+          <div class="srow"><span class="sl" data-i18n="dnsType">Type</span><div class="sv"><b>TXT</b></div></div>
+          <div class="srow"><span class="sl" data-i18n="dnsn">Name</span>
+            <div class="sv sv-split"><div class="kv-v"><code id="dnsN"></code><small class="hint" id="dnsNHint"></small></div><button class="btn sm" type="button" data-copy="dnsN"><i class="bx bx-copy"></i><span data-i18n="copy">Copy</span></button></div></div>
+          <div class="srow"><span class="sl" data-i18n="dnsv">Value</span>
+            <div class="sv sv-split"><code id="dnsV"></code><button class="btn sm" type="button" data-copy="dnsV"><i class="bx bx-copy"></i><span data-i18n="copy">Copy</span></button></div></div>
+          <div class="srow"><span class="sl" data-i18n="dnsWait">How long</span><div class="sv"><span class="mut" data-i18n="dnsWaitD"></span></div></div>
+        </div>
+      </div>
+      <div class="v-act"><button class="btn solid" id="vbtn" type="button" data-i18n="vbtn">Check now</button><span class="mut" data-i18n="vAny">Either way works.</span></div>
+    </section>
+
+    <section class="view" data-view="pages" hidden>
+      <article class="card frame2">
+        <div class="tiles" id="sumP" style="--n:3"></div>
+        <div class="inset chart-box"><div class="ib-h"><h3 id="chTP"></h3></div><div class="bchart" id="chP"></div></div>
+      </article>
+      <article class="card">
+        <div class="ib-h"><h3 data-i18n="tp">Top pages</h3><label class="filter"><i class="bx bx-filter-alt"></i><input id="pgQ" autocomplete="off" spellcheck="false"></label></div>
+        <div class="th"><span data-i18n="thPage">Page</span><span data-i18n="thN">Count</span></div>
+        <div class="lbody" id="pgTable"></div>
+      </article>
+    </section>
+
+    <section class="view" data-view="sources" hidden>
+      <article class="card frame2">
+        <div class="tiles" id="sumS" style="--n:3"></div>
+        <div class="fgrid">
+          <div class="inset chart-box"><div class="ib-h"><h3 id="chTS"></h3></div><div class="bchart" id="chS"></div></div>
+          <div class="inset lb">
+            <div class="ib-h"><h3 data-i18n="lbT">Tag a link</h3></div>
+            <p class="mut" data-i18n="lbD"></p>
+            <label class="field"><span data-i18n="lbUrl">Page address</span><input id="lbUrl" autocomplete="off" spellcheck="false"></label>
+            <label class="field"><span data-i18n="lbSrc">Source name</span><input id="lbSrc" placeholder="telegram" autocomplete="off" spellcheck="false" class="ph-cycle"></label>
+            <div class="lb-out"><span class="lb-l" data-i18n="lbOut">Link to share</span><span class="lb-link" id="lbOut"></span><button class="btn sm" type="button" data-copy="lbOut"><i class="bx bx-copy"></i><span data-i18n="copy">Copy</span></button></div>
+          </div>
+        </div>
+      </article>
+      <article class="card">
+        <div class="ib-h"><h3 data-i18n="ts">Sources</h3></div>
+        <div class="th"><span data-i18n="thSrc">Source</span><span data-i18n="thN">Count</span></div>
+        <div class="lbody" id="srcTable"></div>
+      </article>
+    </section>
+
+    <section class="view" data-view="audience" hidden>
+      <article class="card frame2">
+        <div class="tiles" id="sumA" style="--n:3"></div>
+        <div class="inset chart-box"><div class="ib-h"><h3 id="chTA"></h3></div><div class="bchart" id="chA"></div></div>
+        <ol class="how-row"><li data-i18n="how1"></li><li data-i18n="how2"></li><li data-i18n="how3"></li></ol>
+      </article>
+      <article class="card">
+        <div class="ib-h"><h3 data-i18n="tc">Countries</h3></div>
+        <div class="th"><span data-i18n="thCountry">Country</span><span data-i18n="thN">Count</span></div>
+        <div class="lbody" id="audTable"></div>
+      </article>
+    </section>
+
+    <section class="view" data-view="tech" hidden>
+      <article class="card frame2">
+        <div class="tiles" id="tDevices" style="--n:3"></div>
+        <div class="inset chart-box"><div class="ib-h"><h3 id="chTT"></h3></div><div class="bchart" id="chT"></div></div>
+      </article>
+      <article class="card">
+        <div class="ib-h"><nav class="ptabs" id="techTabs"></nav></div>
+        <div class="th"><span id="techTh"></span><span data-i18n="thN">Count</span></div>
+        <div class="lbody" id="techTable"></div>
+      </article>
+    </section>
+
+    <section class="view" data-view="settings" hidden>
+      <div class="sgroup">
+        <h2 data-i18n="setGen">General</h2>
+        <div class="slist">
+          <div class="srow"><span class="sl" data-i18n="nm">Site name</span>
+            <div class="sv"><div class="row-in"><input id="nm" maxlength="80" autocomplete="off"><button class="btn" id="nsave" type="button" data-i18n="nsave">Save</button></div></div></div>
+          <div class="srow"><span class="sl" data-i18n="sdom">Domain</span><div class="sv sv-split"><b id="sDom"></b><button class="btn sm" id="mvOpen" type="button"><i class="bx bx-transfer-alt"></i><span data-i18n="mvBtn">Change</span></button></div></div>
+          <div class="srow mv-row" id="mvRow" hidden><span class="sl" data-i18n="mvH">New domain</span>
+            <div class="sv">
+              <div class="row-in"><div class="dom-in"><span>https://</span><input id="mvDom" placeholder="example.com" autocomplete="off" spellcheck="false"></div><button class="btn solid" id="mvGo" type="button" data-i18n="mvGo">Check and move</button><button class="btn ghost" id="mvCancel" type="button" data-i18n="cancel">Cancel</button></div>
+              <p class="hint" id="mvHint"></p>
+              <p class="note" id="mvMsg" role="status"></p>
+            </div></div>
+          <div class="srow"><span class="sl" data-i18n="stat">Status</span><div class="sv" id="sStat"></div></div>
+          <div class="srow"><span class="sl" data-i18n="metaH">Title and icon</span>
+            <div class="sv sv-split"><span class="mut" id="sMeta"></span><button class="btn sm" id="mrf" type="button"><i class="bx bx-revision"></i><span data-i18n="mrfShort">Reload</span></button></div></div>
+        </div>
+      </div>
+      <div class="sgroup">
+        <h2 data-i18n="instT">Installation</h2>
+        <div class="slist">
+          <div class="srow"><span class="sl" data-i18n="instD"></span>
+            <div class="sv"><pre class="code" id="inst"></pre><button class="btn sm" type="button" data-copy="inst"><i class="bx bx-copy"></i><span data-i18n="copy">Copy</span></button></div></div>
+        </div>
+      </div>
+      <div class="sgroup" id="accGroup">
+        <h2 data-i18n="accH">Access</h2>
+        <div class="slist">
+          <div class="srow" id="accOwner"><span class="sl" data-i18n="accInv">Invite</span>
+            <div class="sv">
+              <div class="row-in acc-in"><input id="accEmail" type="email" placeholder="name@example.com" autocomplete="off" spellcheck="false"><div class="seg" id="accRole"></div><button class="btn solid" id="accGo" type="button" data-i18n="accInv">Invite</button></div>
+              <p class="note" id="accMsg" role="status"></p>
+              <p class="hint" data-i18n="accRoles"></p>
+              <p class="hint" data-i18n="accHint"></p>
+            </div></div>
+          <div id="accList"></div>
+          <div class="srow own-row" id="ownRow" hidden><span class="sl" data-i18n="ownT">Make an owner?</span>
+            <div class="sv">
+              <p class="own-d" id="ownD"></p>
+              <label class="field"><span class="dz-label" id="ownL"></span><input id="ownIn" autocomplete="off" spellcheck="false"></label>
+              <p class="note" id="ownMsg" role="status"></p>
+              <div class="dz-act"><button class="btn danger solid-bad" id="ownGo" type="button" disabled data-i18n="ownGo">Make an owner</button><button class="btn ghost" id="ownCancel" type="button" data-i18n="cancel">Cancel</button></div>
+            </div></div>
+          <div class="srow" id="accBy" hidden><span class="sl" data-i18n="nOwner">Owner</span><div class="sv" id="accByP"></div></div>
+          <div class="srow" id="accMember" hidden><span class="sl" data-i18n="accRoleL">Your role</span><div class="sv"><b id="accYou"></b><span class="hint" data-i18n="accRoles"></span></div></div>
+        </div>
+      </div>
+      <div class="sgroup">
+        <h2 data-i18n="dzH">Danger zone</h2>
+        <div class="slist danger-zone">
+          <div class="dz-row" data-dz="reset">
+            <div class="dz-txt"><h3 data-i18n="rsT">Reset statistics</h3><p class="mut" data-i18n="rsD"></p></div>
+            <button class="btn danger" type="button" data-dz-open="reset" data-i18n="rsBtn">Reset…</button>
+            <div class="dz-confirm" hidden>
+              <p class="dz-q" data-i18n="rsSure">Reset now?</p>
+              <div class="dz-act"><button class="btn danger solid-bad" type="button" data-dz-go="reset" data-i18n="rsGo">Reset statistics</button><button class="btn ghost" type="button" data-dz-cancel data-i18n="cancel">Cancel</button></div>
+            </div>
+          </div>
+          <div class="dz-row" data-dz="leave">
+            <div class="dz-txt"><h3 data-i18n="lvT">Leave this site</h3><p class="mut" data-i18n="lvD"></p></div>
+            <button class="btn danger" type="button" data-dz-open="leave" data-i18n="lvBtn">Leave</button>
+            <div class="dz-confirm" hidden>
+              <p class="dz-q" data-i18n="lvSure">The site will disappear from your list.</p>
+              <div class="dz-act"><button class="btn danger solid-bad" type="button" data-dz-go="leave" data-i18n="lvT">Leave this site</button><button class="btn ghost" type="button" data-dz-cancel data-i18n="cancel">Cancel</button></div>
+            </div>
+          </div>
+          <div class="dz-row" data-dz="handover">
+            <div class="dz-txt"><h3 data-i18n="hoT">Hand over the site and leave</h3><p class="mut" id="hoD"></p></div>
+            <button class="btn danger" type="button" data-dz-open="handover" data-i18n="hoBtn">Hand over</button>
+            <div class="dz-confirm" hidden>
+              <label class="field"><span class="dz-label"></span><input class="dz-in" autocomplete="off" spellcheck="false"></label>
+              <div class="dz-act"><button class="btn danger solid-bad" type="button" data-dz-go="handover" disabled data-i18n="hoGo">Hand over and leave</button><button class="btn ghost" type="button" data-dz-cancel data-i18n="cancel">Cancel</button></div>
+            </div>
+          </div>
+          <div class="dz-row" data-dz="delete">
+            <div class="dz-txt"><h3 data-i18n="dzT">Delete site</h3><p class="mut" data-i18n="dzD"></p></div>
+            <button class="btn danger" type="button" data-dz-open="delete" data-i18n="delBtn">Delete…</button>
+            <div class="dz-confirm" hidden>
+              <label class="field"><span class="dz-label"></span><input class="dz-in" autocomplete="off" spellcheck="false"></label>
+              <div class="dz-act"><button class="btn danger solid-bad" type="button" data-dz-go="delete" disabled data-i18n="del">Delete site</button><button class="btn ghost" type="button" data-dz-cancel data-i18n="cancel">Cancel</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" data-view="profile" hidden>
+      <div class="sgroup">
+        <h2 data-i18n="pfCardH">Photo and name</h2>
+        <div class="slist pf-head">
+          <span class="pf-ava" id="pfAva"></span>
+          <div class="pf-fields">
+            <label class="field"><span data-i18n="dn">Display name</span>
+              <div class="row-in"><input id="pfName" maxlength="50" autocomplete="name"><button class="btn" id="pfSave" type="button" data-i18n="nsave">Save</button></div>
+            </label>
+            <p class="note" id="pfMsg" role="status"></p>
+            <dl class="facts">
+              <div><dt data-i18n="mail">Email</dt><dd id="pfMail"></dd></div>
+              <div><dt data-i18n="avH">Photo</dt><dd class="pf-photo-act"><span class="hint" data-i18n="avHint"></span><span class="row-btns"><label class="btn sm" for="pfFile"><i class="bx bx-upload"></i><span data-i18n="avUp">Upload photo</span></label><button class="btn sm ghost" id="pfRm" type="button" data-i18n="avRm">Remove</button></span></dd></div>
+            </dl>
+            <input type="file" id="pfFile" accept="image/png,image/jpeg,image/webp,image/gif,image/avif" hidden>
+          </div>
+        </div>
+      </div>
+      <div class="sgroup">
+        <h2 data-i18n="ifH">Interface</h2>
+        <div class="slist">
+          <div class="srow"><span class="sl" data-i18n="thH">Theme</span><div class="sv"><div class="theme-pick" id="themeSeg"></div></div></div>
+          <div class="srow"><span class="sl" data-i18n="langH">Language</span><div class="sv"><div class="chips fill" id="langSeg"></div></div></div>
+          <div class="srow"><span class="sl" data-i18n="autoH">Auto refresh</span><div class="sv"><div class="seg fill" id="rfSeg"></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" data-view="new" hidden>
+      <div class="new-grid fill">
+        <article class="card new-form">
+          <ol class="stepper" id="nStep"></ol>
+          <h1 class="h2" id="newH"></h1>
+          <p class="lead" id="newSub"></p>
+          <label class="field"><span data-i18n="sdom">Domain</span>
+            <div class="dom-in"><span>https://</span><input id="dom" placeholder="example.com" autocomplete="off" spellcheck="false"></div>
+          </label>
+          <button class="btn solid" id="save" type="button" data-i18n="save">Continue</button>
+          <p class="note" id="mmsg" role="status"></p>
+          <ol class="nx">
+            <li><b data-i18n="nx1t"></b><span data-i18n="nx1d"></span></li>
+            <li><b data-i18n="nx2t"></b><span data-i18n="nx2d"></span></li>
+            <li><b data-i18n="nx3t"></b><span data-i18n="nx3d"></span></li>
+          </ol>
+          <a class="back" id="newBack" href="#/overview"><i class="bx bx-left-arrow-alt"></i><span data-i18n="back">Back</span></a>
+        </article>
+        <div class="preview">
+          <span class="pv-tag" data-i18n="sample">Sample data</span>
+          <div class="card main pv">
+            <div class="tiles" id="pvMetrics" style="--n:3"></div>
+            <div class="inset chart-box"><div class="bchart" id="pvChart"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer id="bottom"></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/strings.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/toast.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/dashboard.js"></script>
+</body>
+</html>

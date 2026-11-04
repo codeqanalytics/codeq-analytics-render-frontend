@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" data-theme="dark" data-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<script>
+if (!/\/$|\.html?$/.test(location.pathname)) location.replace(location.pathname + '/' + location.search + location.hash);
+(() => { const d = document.documentElement; try { d.dataset.theme = localStorage.getItem('theme') || 'dark'; } catch (e) {} })();
+</script>
+<link rel="icon" href="../favicon.ico" sizes="32x32">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/boxicons.min.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/components.css">
+<title>codeq analytics</title>
+</head>
+<body>
+<header id="top"></header>
+<main class="wrap doc" id="doc"></main>
+<footer id="bottom"></footer>
+<script src="../js/strings.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/legal.js"></script>
+<script src="../js/ui.js"></script>
+</body>
+</html>

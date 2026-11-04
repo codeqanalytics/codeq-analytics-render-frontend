@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<link rel="icon" href="favicon.ico" sizes="32x32">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="css/boxicons.min.css">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/components.css">
+<script src="js/config.js"></script>
+<script>
+(() => {
+  const d = document.documentElement;
+  try { d.dataset.theme = localStorage.getItem('theme') || 'dark'; } catch (e) {}
+  try {
+    const ref = new URL(CODEQ_CONFIG.SUPABASE_URL).hostname.split('.')[0];
+    if (localStorage.getItem('sb-' + ref + '-auth-token') || /[?&]code=|access_token/.test(location.search + location.hash)) d.classList.add('booting');
+  } catch (e) {}
+})();
+</script>
+<title>codeq analytics</title>
+</head>
+<body>
+<header id="top"></header>
+<main class="wrap landing">
+  <section class="hero2">
+    <div>
+      <h1 class="rise" data-i18n="h1">Find out who visits your site. Spoiler: mostly you.</h1>
+      <p class="lead rise" style="--i:1" data-i18n="sub">Analytics without cookies. One line of code, live numbers, zero banners.</p>
+      <ul class="feats rise" style="--i:2">
+        <li><i class="bx bx-shield-quarter"></i><span data-i18n="f1">No cookies. Your visitors can finally relax.</span></li>
+        <li><i class="bx bx-pulse"></i><span data-i18n="f2">Live view of strangers wandering your pages.</span></li>
+        <li><i class="bx bx-timer"></i><span data-i18n="f3">Ready in about a minute.</span></li>
+      </ul>
+    </div>
+    <section class="card auth rise" style="--i:2">
+      <h2 data-i18n="signin">Sign in or create an account</h2>
+      <p class="sub" data-i18n="signsub">Same button either way. We won’t judge.</p>
+      <div class="providers">
+        <button class="btn" type="button" data-provider="google"><i class="bx bxl-google"></i>Google</button>
+        <button class="btn" type="button" data-provider="github"><i class="bx bxl-github"></i>GitHub</button>
+        <button class="btn" type="button" data-provider="discord"><i class="bx bxl-discord-alt"></i>Discord</button>
+      </div>
+      <div class="or"><span data-i18n="or">or with email</span></div>
+      <form id="emailForm" novalidate>
+        <label class="field"><span data-i18n="email">Email</span>
+          <input type="email" id="email" autocomplete="email" placeholder="you@example.com" required>
+        </label>
+        <button class="btn solid" type="submit" data-i18n="cont">Continue with email</button>
+        <p class="note" id="msg" role="status"></p>
+      </form>
+      <p class="terms">
+        <span data-i18n="termsPrefix"></span>
+        <a class="intro-a" href="legal/?doc=terms" target="_blank" rel="noopener" data-i18n="tos"></a>
+        <span data-i18n="termsAnd"></span>
+        <a class="intro-a" href="legal/?doc=privacy" target="_blank" rel="noopener" data-i18n="privAccept"></a>.
+      </p>
+    </section>
+  </section>
+
+  <section class="frame rise" style="--i:3" aria-hidden="true">
+    <div class="frame-bar"><i></i><i></i><i></i><span>codeq analytics · example.com</span></div>
+    <div class="frame-body">
+      <div class="mini">
+        <div><span data-i18n="kv">Visitors</span><b>12,480</b></div>
+        <div><span data-i18n="kp">Pageviews</span><b>31,207</b></div>
+        <div><span data-i18n="kb">Bounce rate</span><b>41%</b></div>
+        <div><span class="live-top"><span class="dot"></span><span data-i18n="online">online now</span></span><b id="liveN">12</b></div>
+      </div>
+      <div class="frame-grid">
+        <div><div class="bars" id="bars"></div></div>
+        <div><ul class="feed" id="feed"></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block reveal">
+    <h2 class="sec" data-i18n="fh">Everything you need. Nothing you don’t.</h2>
+    <div class="feat-grid">
+      <article class="fcard"><i class="bx bx-pulse"></i><h3 data-i18n="a1t">Live visitors</h3><p data-i18n="a1d">Watch people arrive as it happens. Mildly addictive.</p></article>
+      <article class="fcard"><i class="bx bx-shield-quarter"></i><h3 data-i18n="a2t">No cookies</h3><p data-i18n="a2d">No banners, no pop-ups, no guilt.</p></article>
+      <article class="fcard"><i class="bx bx-code-alt"></i><h3 data-i18n="a3t">Tiny script</h3><p data-i18n="a3d">So small your site will barely notice it.</p></article>
+      <article class="fcard"><i class="bx bx-link-alt"></i><h3 data-i18n="a4t">Traffic sources</h3><p data-i18n="a4d">Search, links, social, or people who typed your URL from memory.</p></article>
+      <article class="fcard"><i class="bx bx-devices"></i><h3 data-i18n="a5t">Devices and browsers</h3><p data-i18n="a5d">Phones, laptops and that one person on a fridge.</p></article>
+      <article class="fcard"><i class="bx bx-lock-alt"></i><h3 data-i18n="a6t">Private by design</h3><p data-i18n="a6d">No IP addresses stored. We’d rather not know.</p></article>
+    </div>
+  </section>
+
+  <section class="block why">
+    <div class="why-h reveal"><h2 class="sec" data-i18n="whH">Why codeq analytics</h2><p data-i18n="whSub"></p></div>
+    <div class="why-list">
+      <article class="reveal"><i class="bx bx-glasses"></i><h3 data-i18n="w1t"></h3><p data-i18n="w1d"></p></article>
+      <article class="reveal" style="--d:1"><i class="bx bx-shield-quarter"></i><h3 data-i18n="w2t"></h3><p data-i18n="w2d"></p></article>
+      <article class="reveal" style="--d:2"><i class="bx bx-badge-check"></i><h3 data-i18n="w3t"></h3><p data-i18n="w3d"></p></article>
+      <article class="reveal" style="--d:3"><i class="bx bx-target-lock"></i><h3 data-i18n="w4t"></h3><p data-i18n="w4d"></p></article>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2 class="sec reveal" data-i18n="hh">Four steps. Really.</h2>
+    <div class="steps s4">
+      <div class="step reveal"><span class="step-n">1</span><h3 data-i18n="st1">Add your site</h3><p data-i18n="s1d"></p><div class="fake">example.com</div></div>
+      <div class="step reveal" style="--d:1"><span class="step-n">2</span><h3 data-i18n="st2">Paste one line</h3><p data-i18n="s2d"></p><pre class="code" aria-hidden="true">&lt;script defer src="…/a.js"
+  data-site="…"&gt;&lt;/script&gt;</pre></div>
+      <div class="step reveal" style="--d:2"><span class="step-n">3</span><h3 data-i18n="st4">Prove it’s yours</h3><p data-i18n="s4d"></p><div class="fake ok"><i class="bx bx-badge-check"></i>example.com</div></div>
+      <div class="step reveal" style="--d:3"><span class="step-n">4</span><h3 data-i18n="st3">Watch visitors arrive</h3><p data-i18n="s3d"></p><div class="bars" aria-hidden="true"><i style="height:30%"></i><i style="height:45%"></i><i style="height:38%"></i><i style="height:62%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:100%"></i></div></div>
+    </div>
+  </section>
+
+  <section class="strip reveal">
+    <i class="bx bx-lock-open-alt"></i>
+    <div><h2 data-i18n="ph">Your visitors’ data stays boring. That’s the point.</h2><p data-i18n="pt">No cookies, no stored IPs, no ad networks. Just counts.</p></div>
+  </section>
+
+  <section class="block reveal">
+    <h2 class="sec" data-i18n="fq">Questions, answered</h2>
+    <div class="faq">
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q1"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r1"></p></div></div>
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q2"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r2"></p></div></div>
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q3"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r3"></p></div></div>
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q4"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r4"></p></div></div>
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q5"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r5"></p></div></div>
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q6"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r6"></p></div></div>
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q7"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r7"></p></div></div>
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q8"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r8"></p></div></div>
+      <div class="qa"><button class="q" type="button" aria-expanded="false"><span data-i18n="q9"></span><i class="bx bx-plus"></i></button><div class="a"><p data-i18n="r9"></p></div></div>
+    </div>
+  </section>
+
+  <section class="cta-band reveal">
+    <h2 class="sec" data-i18n="cta">Ready when you are.</h2>
+    <button class="btn solid" type="button" data-top data-i18n="ctab">Create an account</button>
+  </section>
+</main>
+<footer id="bottom"></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/strings.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/landing.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
