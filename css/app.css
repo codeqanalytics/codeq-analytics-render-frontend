@@ -5,6 +5,9 @@
 .ws{min-width:0;display:flex;flex-direction:column;gap:16px;min-height:calc(100dvh - var(--stick,92px) - 12px)}
 .view{flex:1;display:flex;flex-direction:column;gap:16px;min-height:0}
 .view[hidden]{display:none}
+html {scrollbar-width: auto !important;scrollbar-color: auto !important;}
+body::-webkit-scrollbar {width: 12px;height: 12px;}
+body::-webkit-scrollbar-button {display: none !important;width: 0 !important;height: 0 !important;}
 .fill{flex:1}
 .boot{position:fixed;inset:0;z-index:20;display:grid;place-content:center;justify-items:center;gap:18px;padding:24px;pointer-events:none}
 .boot[hidden]{display:none}
@@ -447,8 +450,13 @@ button:disabled{cursor:default}
   .ntf-pop{position:fixed;top:calc(var(--stick,72px) - 4px);left:16px;right:16px;width:auto}
 }
 
-.view.enter{animation:viewIn .28s var(--ease) both}
-@keyframes viewIn{from{opacity:0;transform:translateY(6px)}}
+.view.enter{animation:viewIn .25s var(--ease) both}
+@keyframes viewIn{
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
 .empty .spin,.boot .spin{animation:spin .8s linear infinite,fadeIn .3s ease .15s backwards}
 @keyframes fadeIn{from{opacity:0}}
 .fade-in{animation:fadeUp .32s var(--ease)}

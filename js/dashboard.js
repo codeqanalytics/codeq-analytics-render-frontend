@@ -574,6 +574,8 @@
   const parse = () => { let r = location.hash.replace(/^#\/?/, '').split(/[/?]/)[0]; if (r === 'account') r = 'profile'; return ROUTES.includes(r) ? r : 'overview'; };
   const go = r => { if (location.hash !== '#/' + r) location.hash = '#/' + r; else show(); };
 
+  let firstOpen = true;
+
   function show() {
     route = parse();
     if (!sites.length && route !== 'profile') route = 'new';
@@ -590,12 +592,21 @@
       a.hidden = unverified && a.hasAttribute('data-stats');
     });
     $('tools').hidden = !(s?.verified && STAT_VIEWS.includes(route));
-    const prevView = currentView();
+
     document.querySelectorAll('[data-view]').forEach(v => {
       const on = v.dataset.view === view;
       v.hidden = !on;
-      if (on && prevView !== view) { v.classList.remove('enter'); void v.offsetWidth; v.classList.add('enter'); }
+      if (on && firstOpen) {
+        v.classList.remove('enter');
+        void v.offsetWidth;
+        v.classList.add('enter');
+        setTimeout(() => v.classList.remove('enter'), 300);
+      } else if (!on) {
+        v.classList.remove('enter');
+      }
     });
+    firstOpen = false;
+
     document.title = `${t({ overview: 'nOv', pages: 'nPg', sources: 'nSrc', audience: 'nAud', tech: 'nTech', settings: 'nSet', profile: 'prH', new: 'add' }[route])} · codeq analytics`;
     if (view !== 'settings') { closeDz(); closeMove(); closeOwn(); }
     renderView(view);
