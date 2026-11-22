@@ -48,13 +48,28 @@
   const meta = () => user.user_metadata || {};
   const myName = () => meta().cq_name || meta().full_name || meta().name || user.email || '';
   const myAvatar = () => { const a = meta().cq_avatar; return a === 'none' ? '' : a || meta().avatar_url || meta().picture || ''; };
-  const paintMe = el => {
-    const url = myAvatar(), n = myName();
-    el.textContent = (n[0] || '?').toUpperCase();
-    if (!url || !/^https:\/\//.test(url)) return;
+  // Кэш уже загруженных картинок: повторная отрисовка берёт копию из памяти синхронно,
+  // поэтому нет промежуточного кадра с глобусом/буквой (мигания).
+  const picCache = new Map();
+  const pic = (url, done, min = 1) => {
+    const hit = picCache.get(url);
+    if (hit) { done(hit.cloneNode()); return true; }
     const img = new Image(); img.alt = ''; img.referrerPolicy = 'no-referrer';
-    img.onload = () => { if (el.isConnected) el.replaceChildren(img); };
+    img.onload = () => { if (img.naturalWidth >= min) { picCache.set(url, img); done(img.cloneNode()); } };
     img.src = url;
+    return false;
+  };
+  const paintMe = el => {
+    const url = myAvatar(), n = myName(), ok = !!url && /^https:\/\//.test(url);
+    const hasImg = el.firstElementChild?.tagName === 'IMG';
+    if (!ok) { el.dataset.shown = ''; el.textContent = (n[0] || '?').toUpperCase(); return; }
+    if (el.dataset.shown === url && hasImg) return;
+    const put = img => {
+      if (!el.isConnected || myAvatar() !== url) return;
+      el.dataset.shown = url; el.replaceChildren(img);
+    };
+    if (pic(url, put)) return;
+    if (!hasImg) el.textContent = (n[0] || '?').toUpperCase();
   };
   const personHtml = p => {
     const name = (p?.name || '').trim(), mail = p?.email || '', av = /^https:\/\//.test(p?.avatar || '') ? p.avatar : '';
@@ -62,12 +77,11 @@
       `<span class="person-t"><b>${esc(name || mail)}</b>${name && mail ? `<small>${esc(mail)}</small>` : ''}</span></span>`;
   };
   const paintPeople = box => box.querySelectorAll('[data-av]').forEach(el => {
-    const img = new Image(); img.alt = ''; img.referrerPolicy = 'no-referrer';
-    img.onload = () => { if (el.isConnected) el.replaceChildren(img); };
-    img.src = el.dataset.av; el.removeAttribute('data-av');
+    const url = el.dataset.av; el.removeAttribute('data-av');
+    pic(url, img => { if (el.isConnected) el.replaceChildren(img); });
   });
   const paintHeader = () => {
-    $('who').innerHTML = '<span class="me-dot"></span><span class="me-txt"></span>';
+    if (!$('who').querySelector('.me-dot')) $('who').innerHTML = '<span class="me-dot"></span><span class="me-txt"></span>';
     paintMe($('who').firstChild);
     $('who').lastChild.textContent = myName();
   };
@@ -77,11 +91,15 @@
   $('out').onclick = signOut;
 
   const paintAva = (el, s) => {
-    el.className = 'ava'; el.innerHTML = '<i class="bx bx-globe"></i>';
-    if (!s?.icon || !/^https?:\/\//.test(s.icon)) return;
-    const img = new Image(); img.alt = ''; img.referrerPolicy = 'no-referrer';
-    img.onload = () => { if (el.isConnected && img.naturalWidth > 1) { el.classList.add('has-icon'); el.replaceChildren(img); } };
-    img.src = s.icon;
+    const url = /^https?:\/\//.test(s?.icon || '') ? s.icon : '';
+    el.dataset.want = url;
+    if (url && el.dataset.shown === url && el.firstElementChild?.tagName === 'IMG') return; // уже показан этот фавикон
+    const put = img => {
+      if (!el.isConnected || el.dataset.want !== url) return;
+      el.dataset.shown = url; el.className = 'ava has-icon'; el.replaceChildren(img);
+    };
+    if (url && pic(url, put, 2)) return;
+    el.dataset.shown = ''; el.className = 'ava'; el.innerHTML = '<i class="bx bx-globe"></i>';
   };
   const askMeta = async id => {
     const { data } = await sb.functions.invoke('site-meta', { body: { site: id } });
@@ -200,6 +218,9 @@
     paintAva($('swAva'), s); $('swName').textContent = label(s); $('swDom').textContent = s && label(s) !== s.domain ? s.domain : '';
     const q = $('swQ').value.trim().toLowerCase();
     const shown = sites.filter(x => !q || label(x).toLowerCase().includes(q) || x.domain.includes(q));
+    const sig = JSON.stringify([cur, lang(), shown.map(x => [x.id, label(x), x.domain, x.icon, x.verified, x.role])]);
+    if ($('swList').dataset.sig === sig) { $('swPop').querySelector('.sw-find').hidden = sites.length < 6; return; }
+    $('swList').dataset.sig = sig;
     $('swList').innerHTML = shown.length ? shown.map(x =>
       `<li role="option" aria-selected="${x.id === cur}"><button type="button" data-site="${x.id}"><span class="ava"></span><span class="sw-txt"><b>${esc(label(x))}</b>${label(x) !== x.domain ? `<small>${esc(x.domain)}</small>` : ''}</span>` +
       (isOwner(x) ? '' : `<span class="role-tag">${esc(t(roleOf(x) === 'manage' ? 'roleM' : 'roleV'))}</span>`) +
@@ -459,7 +480,7 @@
 
   const renderProfile = () => {
     const m = meta();
-    $('pfAva').innerHTML = ''; paintMe($('pfAva'));
+    paintMe($('pfAva'));
     $('pfRm').hidden = !myAvatar();
     if (!$('pfName').matches(':focus')) $('pfName').value = m.cq_name || '';
     $('pfName').placeholder = m.full_name || m.name || t('dnPh');
